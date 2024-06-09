@@ -21,6 +21,32 @@ Imagine that you need to organize your order delivery business so that at the ti
 ### Features
 
 ### Installation 📦
+add env file to root of project: ".env.local"
+
+NODE_ENV="trace"
+HOST="0.0.0.0"
+PORT="8180"
+
+RABBIT_USER="guest"
+RABBIT_PASSW="guest"
+RABBIT_HOST="localhost"
+RABBIT_QUEUENAME="IQ_SERVER"
+RABBIT_ISDURABLE=true
+RABBIT_ISNOACK=false
+RABBIT_PREFETCH=1
+
+REDIS_USER=""
+REDIS_PASSW="r3d1s!"
+REDIS_HOST="localhost"
+REDIS_PORT=6379
+REDIS_PUBLISHER=false
+ALL_DATA_TTL=3600
+REDIS_EVENT_NOTIFICATION=false
+SUBSCRIBER_TTL_SEC=30
+
+LOG_TRANSPORT="Console"
+DEBUG_LEVEL="debug"
+MAX_LOG_LENGTH=16048
 
 ### Start App
-
+npm run start/start-ts
