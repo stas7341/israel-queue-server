@@ -1,0 +1,503 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is Service Israeli Queue (IQ) REST API\n",
+    "version": "1.0.0",
+    "title": "IQ service",
+    "contact": {
+      "name": ""
+    },
+    "license": {
+      "name": "asmtechno",
+      "url": ""
+    }
+  },
+  "basePath": "/api/v1",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/queues": {
+      "get": {
+        "tags": [
+          "Queues"
+        ],
+        "summary": "Get subscription queues",
+        "description": "Get all IQ subscription queues in the system",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Operation successful",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "publisherQueue dynamic key": {
+                  "type": "object",
+                  "properties": {
+                    "notificationQueue": {
+                      "type": "string"
+                    },
+                    "groupCriteria": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "multipleClients": {
+                      "type": "boolean"
+                    },
+                    "initiator": {
+                      "type": "string"
+                    },
+                    "publisherQueue": {
+                      "type": "string"
+                    },
+                    "subscriberUID": {
+                      "type": "string"
+                    },
+                    "ts": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error"
+          }
+        },
+        "x-swagger-router-controller": "httpIQController"
+      }
+    },
+    "/queues/{queue_name}": {
+      "get": {
+        "tags": [
+          "Groups"
+        ],
+        "summary": "Get all groups",
+        "description": "Get all groups of the queue",
+        "parameters": [
+          {
+            "name": "queue_name",
+            "description": "Queue name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operation successful"
+          },
+          "400": {
+            "description": "Invalid queue name supplied"
+          },
+          "404": {
+            "description": "Queue not found"
+          },
+          "405": {
+            "description": "Not allowed method."
+          }
+        },
+        "x-swagger-router-controller": "httpIQController"
+      },
+      "delete": {
+        "tags": [
+          "Queues"
+        ],
+        "summary": "Delete queue",
+        "description": "Delete all groups of the queue",
+        "parameters": [
+          {
+            "name": "queue_name",
+            "description": "Queue name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operation successful"
+          },
+          "400": {
+            "description": "Invalid queue name supplied"
+          },
+          "404": {
+            "description": "Queue not found"
+          },
+          "405": {
+            "description": "Not allowed method."
+          }
+        },
+        "x-swagger-router-controller": "httpIQController"
+      },
+      "post": {
+        "tags": [
+          "Queues"
+        ],
+        "summary": "Add message to a queue",
+        "description": "Create a new message, and add it to the created/exited group",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "queue_name",
+            "description": "Queue name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Message",
+            "description": "Message that should be post to queue",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "action",
+                "payload"
+              ],
+              "properties": {
+                "action": {
+                  "type": "string"
+                },
+                "payload": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operation successful"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "404": {
+            "description": "Queue not found"
+          },
+          "405": {
+            "description": "Not allowed method."
+          }
+        },
+        "x-swagger-router-controller": "httpIQController"
+      }
+    },
+    "/queues/{queue_name}/popup": {
+      "get": {
+        "tags": [
+          "Queues"
+        ],
+        "summary": "Get message keys in the first waiting group",
+        "description": "Return all message keys in the first waiting group, the group will delete permanently. The messages will change the status to consumed.",
+        "parameters": [
+          {
+            "name": "queue_name",
+            "description": "Queue name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operation successful",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "action": {
+                  "type": "string"
+                },
+                "payload": {
+                  "type": "object",
+                  "properties": {
+                    "url": {
+                      "type": "string"
+                    },
+                    "result": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "fields": {
+                            "type": "object",
+                            "properties": {
+                              "routingKey": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "payload": {
+                            "type": "object",
+                            "properties": {
+                              "routingKey": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "initiator": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid queue name supplied"
+          },
+          "404": {
+            "description": "Queue not found"
+          },
+          "405": {
+            "description": "Not allowed method."
+          }
+        },
+        "x-swagger-router-controller": "httpIQController"
+      }
+    },
+    "/queues/{queue_name}/subscribe": {
+      "post": {
+        "tags": [
+          "Queues"
+        ],
+        "summary": "Subscribe to rabbit queue",
+        "description": "Subscribe to the messages, include target IQ name, subscriber’s queue. Response contains TTL in seconds.",
+        "parameters": [
+          {
+            "name": "queue_name",
+            "description": "Queue name, adding queue_name to message payload as publisherQueue",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Subscription",
+            "description": "Subscription info: this keys are required: (notificationQueue, publisherQueue, groupCriteria) \n groupCriteria is an array of strings (each cell is a String.include() statment, operator AND between cells) to find in message object \nsubscriberUID is an optional key. \n all other keys (any) are valideted to send ",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "notificationQueue",
+                "groupCriteria",
+                "multipleClients"
+              ],
+              "properties": {
+                "notificationQueue": {
+                  "type": "string"
+                },
+                "groupCriteria": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "example": [
+                    "/action",
+                    "/payload/eventid"
+                  ]
+                },
+                "multipleClients": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "subscriberUID": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operation successful",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "subscriberUID": {
+                  "type": "string"
+                },
+                "ttl": {
+                  "type": "number",
+                  "description": "seconds"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Sent empty body. \n response message: Did not find the message"
+          },
+          "500": {
+            "description": "General Server Error from scenario,  or: \n 'missing mandatory parameters.' \n 'There is an external subscriber listen on this queue:${publisherQueue}.'"
+          }
+        },
+        "x-swagger-router-controller": "httpIQController"
+      }
+    },
+    "/queues/{queue_name}/groups/{group_key}": {
+      "get": {
+        "tags": [
+          "Groups"
+        ],
+        "summary": "Get message keys in the group",
+        "description": "Get all message keys in the group",
+        "parameters": [
+          {
+            "name": "queue_name",
+            "description": "Queue unique key",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "group_key",
+            "description": "Group unique key",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operation successful"
+          },
+          "400": {
+            "description": "Invalid queue key supplied"
+          },
+          "404": {
+            "description": "Group not found"
+          },
+          "405": {
+            "description": "Not allowed method."
+          }
+        },
+        "x-swagger-router-controller": "httpIQController"
+      },
+      "delete": {
+        "tags": [
+          "Groups"
+        ],
+        "summary": "Delete the group by queue name",
+        "description": "Delete all message keys in the group and remove group from queue.",
+        "parameters": [
+          {
+            "name": "queue_name",
+            "description": "Group unique key",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "group_key",
+            "description": "Group unique key",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operation successful"
+          },
+          "400": {
+            "description": "Invalid queue key supplied"
+          },
+          "404": {
+            "description": "Group not found"
+          },
+          "405": {
+            "description": "Not allowed method."
+          }
+        },
+        "x-swagger-router-controller": "httpIQController"
+      }
+    },
+    "/queues/{queue_name}/messages/{message_key}": {
+      "delete": {
+        "tags": [
+          "Messages"
+        ],
+        "summary": "Delete message and remove it from group",
+        "description": "Delete message",
+        "parameters": [
+          {
+            "name": "queue_name",
+            "description": "queue name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "message_key",
+            "description": "Message unique key",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operation successful"
+          },
+          "400": {
+            "description": "Invalid key supplied"
+          },
+          "404": {
+            "description": "Message not found"
+          },
+          "405": {
+            "description": "Not allowed method."
+          }
+        },
+        "x-swagger-router-controller": "httpIQController"
+      }
+    },
+    "/messages/{message_key}": {
+      "get": {
+        "tags": [
+          "Messages"
+        ],
+        "summary": "Get message",
+        "description": "Get message",
+        "parameters": [
+          {
+            "name": "message_key",
+            "description": "Message unique key",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operation successful"
+          },
+          "400": {
+            "description": "Invalid key supplied"
+          },
+          "404": {
+            "description": "Message not found"
+          },
+          "405": {
+            "description": "Not allowed method."
+          }
+        },
+        "x-swagger-router-controller": "httpIQController"
+      }
+    }
+  }
+}
