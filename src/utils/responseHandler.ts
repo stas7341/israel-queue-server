@@ -23,3 +23,7 @@ export const sendBaseResponse = (res, code = 200, data = {}) => {
                 data,
         });
 };
+
+export const sendJsonResponse = (res, code = 200, data = {}) => {
+        res.status(code).json(data);
+};

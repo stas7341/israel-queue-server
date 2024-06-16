@@ -2,9 +2,9 @@ import { param, query, validationResult } from 'express-validator';
 import { customValidation } from './helper';
 
 const validateMessage = [
-        query('ticker')
+        query('queue_name')
                 .exists()
-                .withMessage('ticker key is required')
+                .withMessage('queue_name key is required')
                 .bail()
                 .notEmpty()
                 .withMessage('ticker must have a value')

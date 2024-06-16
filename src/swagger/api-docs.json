@@ -168,10 +168,14 @@
               ],
               "properties": {
                 "action": {
-                  "type": "string"
+                  "type": "string",
+                  "example": "doSomething"
                 },
                 "payload": {
-                  "type": "object"
+                  "type": "object",
+                  "example": {
+                      "eventid": 12345
+                    }
                 }
               }
             }
@@ -299,7 +303,8 @@
               ],
               "properties": {
                 "notificationQueue": {
-                  "type": "string"
+                  "type": "string",
+                  "example": "test"
                 },
                 "groupCriteria": {
                   "type": "array",
@@ -311,12 +316,9 @@
                     "/payload/eventid"
                   ]
                 },
-                "multipleClients": {
-                  "type": "boolean",
-                  "default": false
-                },
                 "subscriberUID": {
-                  "type": "string"
+                  "type": "string",
+                  "example": "12345-67890"
                 }
               }
             }
@@ -329,7 +331,8 @@
               "type": "object",
               "properties": {
                 "subscriberUID": {
-                  "type": "string"
+                  "type": "string",
+                  "example": "12345-67890"
                 },
                 "ttl": {
                   "type": "number",

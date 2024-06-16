@@ -6,82 +6,82 @@ const router = express.Router();
 
 router.post(
     '/queues/:queue_name/subscribe',
-    validator.validateMessage,
-    validator.validatePayload,
+    //validator.validateMessage,
+    //validator.validatePayload,
     validator.validationHandler,
-    HttpController.getActiveQueues
+    HttpController.subscribeToQueue
+);
+
+router.post(
+    '/queues/:queue_name',
+    //validator.validateMessage,
+    //validator.validatePayload,
+    validator.validationHandler,
+    HttpController.postMessageToQueue
 );
 
 router.get(
     '/queues/:queue_name/popup/:subscriberId?',
-    validator.validateMessage,
-    validator.validatePayload,
+    //validator.validateMessage,
+    //validator.validatePayload,
     validator.validationHandler,
-    HttpController.getActiveQueues
+    HttpController.popupGroup
 );
 
 router.get(
     '/queues',
-    validator.validateMessage,
-    validator.validatePayload,
+    //validator.validateMessage,
+    //validator.validatePayload,
     validator.validationHandler,
-    HttpController.getActiveQueues
+    HttpController.getQueuesStatistics
 );
 
 router.get(
     '/queues/:queue_name',
-    validator.validateMessage,
-    validator.validatePayload,
+    //validator.validateMessage,
+    //validator.validatePayload,
     validator.validationHandler,
-    HttpController.getActiveQueues
-);
-
-router.post(
-    'queues/:queue_name',
-    validator.validateMessage,
-    validator.validatePayload,
-    validator.validationHandler,
-    HttpController.getActiveQueues
+    HttpController.getAllGroupsFromQueue
 );
 
 router.delete(
     '/queues/:queue_name',
-    validator.validateMessage,
-    validator.validatePayload,
+    //validator.validateMessage,
+    //validator.validatePayload,
     validator.validationHandler,
-    HttpController.getActiveQueues
+    HttpController.deleteQueue
 );
 
 router.get(
     '/queues/:queue_name/groups/:group_key',
-    validator.validateMessage,
-    validator.validatePayload,
+    //validator.validateMessage,
+    //validator.validatePayload,
     validator.validationHandler,
-    HttpController.getActiveQueues
+    HttpController.getMessagesFromGroup
 );
 
 router.delete(
     '/queues/:queue_name/groups/:group_key',
-    validator.validateMessage,
-    validator.validatePayload,
+    //validator.validateMessage,
+    //validator.validatePayload,
     validator.validationHandler,
-    HttpController.getActiveQueues
+    HttpController.deleteGroup
 );
 
 router.get(
     '/messages/:message_key',
-    validator.validateMessage,
-    validator.validatePayload,
+    //validator.validateMessage,
+    //validator.validatePayload,
     validator.validationHandler,
-    HttpController.getActiveQueues
+    HttpController.getMessage
 );
 
 router.delete(
     '/queues/:queue_key/messages/:message_key',
-    validator.validateMessage,
-    validator.validatePayload,
+    //validator.validateMessage,
+    //validator.validatePayload,
     validator.validationHandler,
-    HttpController.getActiveQueues
+    HttpController.deleteMessage
 );
 
 
