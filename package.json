@@ -3,17 +3,15 @@
   "version": "1.0.0",
   "description": "The Israel Queue Server",
   "scripts": {
-    "start-ts": "ts-node src/app.ts",
+    "start-ts": "PROJECT_ENV=local ts-node src/app.ts",
     "start": "node ./dist/app.js",
     "debug": "tsc; NODE_ENV=debug DEBUG=* node dist/app.js --unhandled-rejections=strict",
     "build": "tsc --alwaysStrict ",
     "load-modules": "npm i --also-dev",
-    "dev": "NODE_ENV= LOAD_CONFIGS_DYNAMODB=false ts-node src/app.ts",
-    "link-iqlib": "npm link @asmtechno/iqlib",
-    "unlink-iqlib": "npm unlink @asmtechno/iqlib"
+    "dev": "PROJECT_ENV=dev ts-node src/app.ts"
   },
   "keywords": [],
-  "author": "Stas M.",
+  "author": "Stas M. and Ziv B.",
   "license": "ISC",
   "dependencies": {
     "@asmtechno/iqlib": "^1.0.4",

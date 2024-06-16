@@ -17,7 +17,7 @@ export const boot = async() => {
     await redis.init(config["redis"]);
 
     const repo = createRepo("redis", redis);
-    const iqMng = createIQManager({repoClient: repo, ttl: 60});
+    const iqMng = createIQManager({repoClient: repo, ttl: config["redis"].all_data_ttl});
 
     await IQAppService.getInstance().init({iqMngInstance: iqMng});
 
@@ -31,32 +31,6 @@ export const boot = async() => {
     app.listen(port, () =>
         Logger.getInstance().log(`${app.get('env')}: server App listening on PORT ${port}...`, LogLevel.info)
     );
-
-    /*await iqMng.createQueue("test", ["/action","/payload/eventId"]);
-
-    await iqMng.addMessageToQueue("test", new Message('test1', {eventId: 12345}));
-    await iqMng.addMessageToQueue("test", new Message('test2', {eventId: 12345}));
-    await iqMng.addMessageToQueue("test", new Message('test1', {eventId: 12346}));
-    await iqMng.addMessageToQueue("test", new Message('test2', {eventId: 12345}));
-    await iqMng.addMessageToQueue("test", new Message('test2', {}));
-    await iqMng.addMessageToQueue("test", new Message('', {eventId: 12345}));
-    await iqMng.addMessageToQueue("test", new Message('', {})).catch(err => {
-        Logger.getInstance().log('add message failed', LogLevel.error, err);
-    });
-    await iqMng.addMessageToQueue("test", new Message('test2', {eventId: 12345}));
-
-    const listGroups: any [] = await iqMng.getListGroupsFromQueue("test");
-    console.log(JSON.stringify(listGroups));
-    if(listGroups?.length) {
-        const listGroupMessages = await iqMng.getListMessagesFromGroup(listGroups[0]);
-        console.log(JSON.stringify(listGroupMessages));
-    }
-    const popupGroup = await iqMng.popupGroupFromQueue("test");
-    console.log(JSON.stringify(popupGroup));
-    if(listGroups?.length) {
-        const listGroupMessages = await iqMng.getListMessagesFromGroup(listGroups[0]);
-        console.log(JSON.stringify(listGroupMessages));
-    }*/
 }
 
 // Initializing swagger to show the API docs.

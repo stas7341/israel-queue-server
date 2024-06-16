@@ -1,7 +1,7 @@
 
 import * as dotenv from 'dotenv';
 
-const path = '.env.local';
+const path = `.env.${process.env.PROJECT_ENV}`;
 dotenv.config({path});
 
 module.exports = {

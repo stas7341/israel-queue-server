@@ -160,7 +160,8 @@ export class IQAppService extends EventEmitter {
     public deleteQueue = async (params) => {
         this.isInit();
         const queueName = params.queue_name;
-        await this.iqMng?.deleteQueue(queueName)
+        this.queuesList.delete(queueName);
+        await this.iqMng?.deleteQueue(queueName);
         return {queue: queueName, result: "done"};
     };
 
