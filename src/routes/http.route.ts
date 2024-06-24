@@ -5,7 +5,7 @@ import validator from '../utils/inputValidators';
 const router = express.Router();
 
 router.post(
-    '/queues/:queue_name/subscribe',
+    '/queues/:queueName/subscribe',
     //validator.validateMessage,
     //validator.validatePayload,
     validator.validationHandler,
@@ -13,15 +13,23 @@ router.post(
 );
 
 router.post(
-    '/queues/:queue_name',
+    '/queues/:queueName',
     //validator.validateMessage,
     //validator.validatePayload,
     validator.validationHandler,
     HttpController.postMessageToQueue
 );
 
+router.post(
+    '/queues/:queueName/popupAck/:subscriberId?',
+    //validator.validateMessage,
+    //validator.validatePayload,
+    validator.validationHandler,
+    HttpController.popupGroupAck
+);
+
 router.get(
-    '/queues/:queue_name/popup/:subscriberId?',
+    '/queues/:queueName/popup/:subscriberId?',
     //validator.validateMessage,
     //validator.validatePayload,
     validator.validationHandler,
@@ -37,7 +45,7 @@ router.get(
 );
 
 router.get(
-    '/queues/:queue_name',
+    '/queues/:queueName',
     //validator.validateMessage,
     //validator.validatePayload,
     validator.validationHandler,
@@ -45,7 +53,7 @@ router.get(
 );
 
 router.delete(
-    '/queues/:queue_name',
+    '/queues/:queueName',
     //validator.validateMessage,
     //validator.validatePayload,
     validator.validationHandler,
@@ -53,7 +61,7 @@ router.delete(
 );
 
 router.get(
-    '/queues/:queue_name/groups/:group_key',
+    '/queues/:queueName/groups/:group_key',
     //validator.validateMessage,
     //validator.validatePayload,
     validator.validationHandler,
@@ -61,7 +69,7 @@ router.get(
 );
 
 router.delete(
-    '/queues/:queue_name/groups/:group_key',
+    '/queues/:queueName/groups/:group_key',
     //validator.validateMessage,
     //validator.validatePayload,
     validator.validationHandler,
@@ -84,5 +92,10 @@ router.delete(
     HttpController.deleteMessage
 );
 
+router.post(
+    '/test/:queueName',
+    validator.validationHandler,
+    HttpController.manualTest
+);
 
 export default router;

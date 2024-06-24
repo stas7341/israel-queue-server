@@ -12,7 +12,7 @@
       "url": ""
     }
   },
-  "basePath": "/api/v1",
+  "basePath": "/",
   "schemes": [
     "http"
   ],
@@ -198,7 +198,7 @@
         "x-swagger-router-controller": "httpIQController"
       }
     },
-    "/queues/{queue_name}/popup": {
+    "/queues/{queue_name}/popup/{subscriber_uid}": {
       "get": {
         "tags": [
           "Queues"
@@ -212,6 +212,114 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "subscriber_uid",
+            "description": "subscriber UID assigned to client",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operation successful",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "action": {
+                  "type": "string"
+                },
+                "payload": {
+                  "type": "object",
+                  "properties": {
+                    "url": {
+                      "type": "string"
+                    },
+                    "result": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "fields": {
+                            "type": "object",
+                            "properties": {
+                              "routingKey": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "payload": {
+                            "type": "object",
+                            "properties": {
+                              "routingKey": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "initiator": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid queue name supplied"
+          },
+          "404": {
+            "description": "Queue not found"
+          },
+          "405": {
+            "description": "Not allowed method."
+          }
+        },
+        "x-swagger-router-controller": "httpIQController"
+      }
+    },
+    "/queues/{queue_name}/popupAck/{subscriber_uid}": {
+      "post": {
+        "tags": [
+          "Queues"
+        ],
+        "summary": "Send ack to complete popup",
+        "description": "The messages in a pending status will change the status to completed.",
+        "parameters": [
+          {
+            "name": "queue_name",
+            "description": "Queue name, adding queue_name to message payload as publisherQueue",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "subscriber_uid",
+            "description": "subscriber UID assigned to client",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "popupId",
+            "description": "The popup id, received through the get:popup ",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "popupId"
+              ],
+              "properties": {
+                "popupId": {
+                  "type": "string",
+                  "example": "12345-67890-ytbds-mkdkf"
+                }
+              }
+            }
           }
         ],
         "responses": {
@@ -299,12 +407,13 @@
               "required": [
                 "notificationQueue",
                 "groupCriteria",
-                "multipleClients"
+                "multipleClients",
+                "popupAck"
               ],
               "properties": {
                 "notificationQueue": {
                   "type": "string",
-                  "example": "test"
+                  "example": "iq_notification_test"
                 },
                 "groupCriteria": {
                   "type": "array",
@@ -319,6 +428,10 @@
                 "subscriberUID": {
                   "type": "string",
                   "example": "12345-67890"
+                },
+                "popupAck": {
+                  "type": "boolean",
+                  "example": "true"
                 }
               }
             }
@@ -483,6 +596,100 @@
             "in": "path",
             "required": true,
             "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operation successful"
+          },
+          "400": {
+            "description": "Invalid key supplied"
+          },
+          "404": {
+            "description": "Message not found"
+          },
+          "405": {
+            "description": "Not allowed method."
+          }
+        },
+        "x-swagger-router-controller": "httpIQController"
+      }
+    },
+    "/test/{queue_name}": {
+      "post": {
+        "tags": [
+          "Test"
+        ],
+
+        "summary": "Start test",
+        "description": "Start test",
+        "parameters": [
+          {
+            "name": "queue_name",
+            "description": "Queue name",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "example": "test"
+          },
+          {
+            "name": "messagesQuantity",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "description": "The quantity of messages",
+            "example": 10
+          },
+          {
+            "name": "maxSecToResponse",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "description": "The maximum seconds to response",
+            "example": 30
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string",
+                      "example": "test"
+                    },
+                    "payload": {
+                      "type": "object",
+                      "properties": {
+                        "eventid": {
+                          "type": "string",
+                          "example": "123"
+                        },
+                        "key2": {
+                          "type": "string",
+                          "example": "value2"
+                        }
+                      }
+                    }
+                  }
+                },
+                "groupCriteria": {
+                  "type": "array",
+                  "example": ["/action", "/payload/eventid"]
+                },
+                "multipleClients": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "subscriberUID": {
+                  "type": "string"
+                }
+              }
+            }
           }
         ],
         "responses": {

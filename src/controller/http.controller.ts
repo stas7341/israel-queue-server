@@ -2,20 +2,28 @@ import {sendErrorResponse, sendJsonResponse, sendSuccessResponse} from '../utils
 import { asyncMiddleware } from '../middleware/async';
 import {IQAppService} from "../services/IQAppService";
 import {Message} from "@asmtechno/service-lib";
+import {fullManualTest} from "../tests/manualTest";
+import {param} from "express-validator";
 
 const subscribeToQueue = asyncMiddleware(async (req, res) => {
-        const data = await IQAppService.getInstance().subscribeToQueue(req.params.queue_name, req.body);
+        const data = await IQAppService.getInstance().subscribeToQueue(req.params.queueName, req.body);
         return data ? sendJsonResponse(res, 200, data) : sendErrorResponse(res, 500, "failed");
 });
 
 const popupGroup = asyncMiddleware(async (req, res) => {
-        const data = await IQAppService.getInstance().popupGroup(req.params);
+        const responseMsg = await IQAppService.getInstance().popupGroup(req.params);
+        responseMsg.payload.url = req.url;
+        return responseMsg ? sendJsonResponse(res, 200, responseMsg) : sendErrorResponse(res, 500, "failed");
+});
+
+const popupGroupAck = asyncMiddleware(async (req, res) => {
+        const data = await IQAppService.getInstance().popupGroupAck(req.params, req.body);
         return data ? sendJsonResponse(res, 200, data) : sendErrorResponse(res, 500, "failed");
 });
 
 const getQueuesStatistics = asyncMiddleware(async (req, res) => {
-        const data = await IQAppService.getInstance().getQueuesStatistics(req.params);
-        return data ? sendJsonResponse(res, 200, data) : sendErrorResponse(res, 500, "failed");
+        const data = await IQAppService.getInstance().getQueuesStatistics();
+        return data ? sendJsonResponse(res, 200, {items: data}) : sendErrorResponse(res, 500, "failed");
 });
 
 const getAllGroupsFromQueue = asyncMiddleware(async (req, res) => {
@@ -24,7 +32,7 @@ const getAllGroupsFromQueue = asyncMiddleware(async (req, res) => {
 });
 
 const postMessageToQueue = asyncMiddleware(async (req, res) => {
-        const data = await IQAppService.getInstance().postMessageToQueue(req.params.queue_name, req.body);
+        const data = await IQAppService.getInstance().postMessageToQueue(req.params.queueName, req.body);
         return data ? sendJsonResponse(res, 200, data) : sendErrorResponse(res, 500, "failed");
 });
 
@@ -35,7 +43,8 @@ const deleteQueue = asyncMiddleware(async (req, res) => {
 
 const getMessagesFromGroup = asyncMiddleware(async (req, res) => {
         const data = await IQAppService.getInstance().getMessagesFromGroup(req.params);
-        return data ? sendJsonResponse(res, 200, data) : sendErrorResponse(res, 500, "failed");
+        const response = new Message('response', {url: req.params?.group_key, messages: data});
+        return sendJsonResponse(res, 200, response);
 });
 
 const deleteGroup = asyncMiddleware(async (req, res) => {
@@ -53,9 +62,15 @@ const deleteMessage = asyncMiddleware(async (req, res) => {
         return data ? sendJsonResponse(res, 200, data) : sendErrorResponse(res, 500, "failed");
 });
 
+const manualTest = asyncMiddleware(async (req, res) => {
+        const data = await fullManualTest(req, res);
+        return data ? sendJsonResponse(res, 200, data) : sendErrorResponse(res, 500, "failed");
+});
+
 const HttpController = {
         subscribeToQueue,
         popupGroup,
+        popupGroupAck,
         getQueuesStatistics,
         getAllGroupsFromQueue,
         postMessageToQueue,
@@ -63,7 +78,8 @@ const HttpController = {
         getMessagesFromGroup,
         deleteGroup,
         getMessage,
-        deleteMessage
+        deleteMessage,
+        manualTest
 };
 
 export default HttpController;

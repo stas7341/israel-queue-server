@@ -7,9 +7,11 @@ dotenv.config({path});
 module.exports = {
         "app": {
                 "ip": process.env.HOST || "0.0.0.0",
-                "port": process.env.PORT || "80"
+                "port": process.env.PORT || "80",
+                "subscriber_ttl_sec": process.env.SUBSCRIBER_TTL_SEC || 300,
+                "basePath": process.env.BASE_PATH || '/iq/v2/api/',
         },
-        "aqmp": {
+        "amqp": {
                 "username": process.env.RABBIT_USER || "guest",
                 "password": process.env.RABBIT_PASSW || "guest",
                 "host": process.env.RABBIT_HOST,

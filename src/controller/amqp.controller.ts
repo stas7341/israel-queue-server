@@ -3,7 +3,7 @@ import {IQAppService} from "../services/IQAppService";
 
 const log = (msg: string, level: LogLevel, data?) => Logger.getInstance().log("amqp.controller::" + msg, level, data);
 
-export async function handlingAQMPMessages(msg, ch): Promise<boolean> {
+export async function handlingAMQPMessages(msg, ch): Promise<boolean> {
     try {
         const message = Message.clone(JSON.parse(msg.content.toString().trim())) as Message;
         log(`handlingPublisherAQMP:Received routing: ${msg?.fields?.routingKey}`, LogLevel.info,
@@ -11,7 +11,7 @@ export async function handlingAQMPMessages(msg, ch): Promise<boolean> {
 
         message.payload.routingKey = msg?.fields?.routingKey;
         if(message.action === 'unsubscribe') {
-            //await subscribersManager.unsubscribe(message.payload as SubscriptionInfo, ch);
+            await IQAppService.getInstance().unsubscribe(msg?.fields?.routingKey, ch);
             return true;
         }
 
