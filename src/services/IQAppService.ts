@@ -91,7 +91,7 @@ export class IQAppService {
 
         iQueue.subscribers.set(subscriber.UID, subscriber);
 
-        log(`end subscribe, queue: ${queueName}`, LogLevel.info, subscriber);
+        log(`end subscribe, queue: ${queueName}`, LogLevel.info, iQueue.toPrint());
 
         return {...subscriber, subscriberUID: subscriber.UID, ttl: Number(this.subscriberTTL)};
     };
@@ -101,13 +101,15 @@ export class IQAppService {
         const { queueName, subscriberId } = params;
         log(`start popup, queue: ${queueName}`, LogLevel.info, {subscriberId});
 
-        const messageKeys = await this.iqMng?.popupGroupFromQueue(queueName);
-        if(!messageKeys)
+        const group = await this.iqMng?.popupGroupFromQueue2(queueName);
+        const allMessages = group?.allMessages;
+        const groupName = group?.groupName;
+        if(!allMessages)
             return new Message('response', {result: []});
 
-        const messages = Object.keys(messageKeys).map(key => JSON.parse(messageKeys[key].toString()));
+        const messages = Object.keys(allMessages).map(key => JSON.parse(allMessages[key].toString()));
         const popupId = GeneralUtils.newGuid();
-        const response = new Message('response', {result: messages, popupId});
+        const response = new Message('response', {result: messages, popupId, groupName});
 
         const iQueue = this.queuesList.get(queueName);
         const subscriber = iQueue?.subscribers?.get(subscriberId);
@@ -122,7 +124,7 @@ export class IQAppService {
             await this.repoClient?.addFieldsToHash(keyPendingPopupMessages, popupId, JSON.stringify(pendingResponse));
             log(`subscriber asked to use popupAck`, LogLevel.debug, {subscriber, popupId: pendingResponse.payload.popupId});
         }
-        log(`end popup, queue: ${queueName}`, LogLevel.info, {subscriberId, msgCount: messages.length});
+        log(`end popup, queue: ${queueName}, groupName: ${groupName}`, LogLevel.info, {subscriberId, msgCount: messages.length});
         return response;
     };
 
@@ -272,7 +274,7 @@ export class IQAppService {
                     if(iQueue.listening)
                         amqpService.getInstance().sendToQueue(queueName, new Message('unsubscribe', {}));
                 }
-                log(`scheduler::queue: ${queueName}`, LogLevel.debug, iQueue);
+                log(`scheduler::queue: ${queueName}`, LogLevel.debug, iQueue.toPrint());
             }
         }
         const checkPendingMessages = async () => {

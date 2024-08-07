@@ -12,4 +12,13 @@ export class IQueue {
         this.groupCriteria = options.groupCriteria;
         this.listening = false;
     }
+    toPrint = () => {
+        return {
+            name: this.name,
+            notificationQueue: this.notificationQueue,
+            groupCriteria: this.groupCriteria,
+            listening: this.listening,
+            subscribers: [...this.subscribers.entries()]
+        }
+    }
 }
