@@ -1,6 +1,6 @@
 {
   "name": "IsraelQueueServer",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "The Israel Queue Server",
   "scripts": {
     "start-ts": "PROJECT_ENV=local ts-node ./src/app.ts",
@@ -17,8 +17,8 @@
   "author": "Stas M.",
   "license": "ISC",
   "dependencies": {
-    "@asmtechno/iqlib": "^1.0.7",
-    "@asmtechno/service-lib": "^1.0.14",
+    "@asmtechno/iqlib": "^1.0.8",
+    "@asmtechno/service-lib": "^1.0.15",
     "auto-version-js": "^0.3.10",
     "dotenv": "^16.4.5",
     "express-validator": "^7.1.0",
