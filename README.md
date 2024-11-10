@@ -48,7 +48,7 @@ add env file to root of project: ".env.local"
 <br />RABBIT_ISNOACK=false
 <br />RABBIT_PREFETCH=1
 <br />REDIS_USER=""
-<br />REDIS_PASSW="r3d1s!"
+<br />REDIS_PASSW="*****"
 <br />REDIS_HOST="localhost"
 <br />REDIS_PORT=6379
 <br />ALL_DATA_TTL=3600
@@ -75,7 +75,7 @@ There are number major things of this approach:
 Group: Instead of just containing messages, the queue will contain groups of messages. Groups may have one or more messages in them, but cannot be empty. They will be organized in order of group key.
 
 Group key: this combination of primary key(event id), routing key(target queue) and action type(see 5) of message. Probably it can be defined by configuration settings, what the fields in the message act for creating group keys.
-Example: eventid:123456:queue:event_parser:action:create
+Example: id:123456:queue:master:action:call
 
 Enqueueing: When enqueueing a new message, we’ll iterate over all the groups in the queue. If the item being inserted to the queue is related to an item in a particular group, the message will be added to this group.
 
